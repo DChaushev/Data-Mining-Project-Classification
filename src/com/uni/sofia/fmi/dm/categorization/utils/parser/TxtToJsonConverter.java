@@ -25,6 +25,7 @@ public class TxtToJsonConverter {
      */
     public static void convertTxtToJson(File file, int numberOfEntries)
     {
+        // TODO: MITAK check this json shit is it ok?
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
 

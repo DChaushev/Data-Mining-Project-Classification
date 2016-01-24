@@ -41,7 +41,7 @@ public class Classifier {
 
     private void calculateProbability(Token token, Categories category, int sizeOfVocabulary)
     {
-        int numberOfWordsForCategory = tih.getOccurencesForCategory(category);
+        int numberOfWordsForCategory = tih.getNumberOfTokensForCategory(category);
 
         double probability = (token.getOccurencesForCategory(category) + 1) / (numberOfWordsForCategory + sizeOfVocabulary);
 

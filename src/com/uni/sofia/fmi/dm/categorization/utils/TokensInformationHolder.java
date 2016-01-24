@@ -11,18 +11,40 @@ public class TokensInformationHolder {
 
     private Map<String, Token> tokens;
 
+    // keep here how many tokens are there for a category
+    // needed to calculate probability for a given token
+    private int[] numberOfTokens;
+
+    // keep here how many instances of a given category are there
+    // needed to calculate probability of a given category
     private int[] classOccurrences;
+
+    // total number of instances
     private int numberOfInstances;
+
 
     public TokensInformationHolder()
     {
         tokens = new HashMap<>();
 
         classOccurrences = new int[Categories.values().length];
+        numberOfTokens = new int[Categories.values().length];
     }
 
     public Map<String, Token> getTokens() {
         return tokens;
+    }
+
+    /**
+     * @return returns the number of words that have occured for the given category
+     */
+    public int getNumberOfTokensForCategory(Categories category) {
+        return numberOfTokens[category.getCategoryValue()];
+    }
+
+    public void setNumberOfTokensForCategory(int numberOfTokens, Categories category)
+    {
+        this.numberOfTokens[category.getCategoryValue()] = numberOfTokens;
     }
 
     public void setTokens(Map<String, Token> tokens) {
@@ -45,9 +67,13 @@ public class TokensInformationHolder {
         this.numberOfInstances = numberOfInstances;
     }
 
+    public void setOccurencesForCategory(int occurences, Categories category)
+    {
+        this.classOccurrences[category.getCategoryValue()] = occurences;
+    }
+
     /**
-     *
-     * @return returns the number of words that have occured for the given category
+     * @return returns the number of instances that we have loaded for the given category
     */
     public int getOccurencesForCategory(Categories category)
     {
