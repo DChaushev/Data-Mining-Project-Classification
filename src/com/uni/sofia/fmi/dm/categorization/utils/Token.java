@@ -48,8 +48,7 @@ public class Token {
         }
         else
         {
-            Categories numCategories = Categories.NUMBER_OF_CATEGORIES;
-            this.classOccurrences = new int[numCategories.getCategoryValue()];
+            this.classOccurrences = new int[Categories.values().length];
 
             for (int i = 0; i < this.classOccurrences.length; ++i)
             {
@@ -81,8 +80,7 @@ public class Token {
         }
         else
         {
-            Categories numCategories = Categories.NUMBER_OF_CATEGORIES;
-            this.probabilities = new double[numCategories.getCategoryValue()];
+            this.probabilities = new double[Categories.values().length];
 
             for (int i = 0; i < this.probabilities.length; ++i)
             {

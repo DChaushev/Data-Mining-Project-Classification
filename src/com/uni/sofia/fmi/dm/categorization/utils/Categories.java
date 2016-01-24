@@ -7,8 +7,7 @@ package com.uni.sofia.fmi.dm.categorization.utils;
 public enum Categories {
 
     POSITIVE(0),
-    NEGATIVE(1),
-    NUMBER_OF_CATEGORIES(2); // IMPORTANT!!! update this if you add a category
+    NEGATIVE(1);
 
     private final int value;
 

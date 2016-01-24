@@ -34,10 +34,7 @@ public class Classifier {
         {
             for(Categories category : Categories.values())
             {
-                if (category != Categories.NUMBER_OF_CATEGORIES)
-                {
-                    calculateProbability(entry.getValue(), category, sizeOfVocabulary);
-                }
+                calculateProbability(entry.getValue(), category, sizeOfVocabulary);
             }
         }
     }

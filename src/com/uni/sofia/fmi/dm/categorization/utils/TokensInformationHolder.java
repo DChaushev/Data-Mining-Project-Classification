@@ -18,8 +18,7 @@ public class TokensInformationHolder {
     {
         tokens = new HashMap<>();
 
-        Categories numCategories = Categories.NUMBER_OF_CATEGORIES;
-        classOccurrences = new int[numCategories.getCategoryValue()];
+        classOccurrences = new int[Categories.values().length];
     }
 
     public Map<String, Token> getTokens() {
