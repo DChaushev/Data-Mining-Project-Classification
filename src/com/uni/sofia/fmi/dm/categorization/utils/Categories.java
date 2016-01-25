@@ -18,4 +18,5 @@ public enum Categories {
     public int getCategoryValue() {
         return value;
     }
+
 }
