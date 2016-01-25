@@ -5,16 +5,19 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.*;
-import java.util.Formatter;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 
 /**
  * Created by vankata on 24.01.16.
  */
 public class TxtToJsonConverter {
 
-    public static void convertTxtToJson(String url, int numberOfEntries) {
-        convertTxtToJson(new File(url), numberOfEntries);
+    public static void convertTxtToJson(String url, String outputFileName, int numberOfEntries) {
+        convertTxtToJson(new File(url), new File(outputFileName), numberOfEntries);
     }
 
     /**
@@ -23,8 +26,9 @@ public class TxtToJsonConverter {
      *
      * @param file the txt file
      * @param numberOfEntries - number of entries that are needed
+     * @param outputFile
      */
-    public static void convertTxtToJson(File file, int numberOfEntries) {
+    public static void convertTxtToJson(File file, File outputFile, int numberOfEntries) {
         // TODO: MITAK check this json shit is it ok?
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();
@@ -50,11 +54,9 @@ public class TxtToJsonConverter {
 
                     score = Double.parseDouble(scoreString);
 
-                    if (score == 3.0) {
-                        continue;
-                    } else if (score < 3.0) {
+                    if (score < 3.0) {
                         currentCategory = Categories.NEGATIVE;
-                    } else {
+                    } else if (score > 3.0) {
                         currentCategory = Categories.POSITIVE;
                     }
 
@@ -77,15 +79,16 @@ public class TxtToJsonConverter {
 
         }
 
-        dumpIntoJson(jsonArray.toString());
+        dumpIntoJson(jsonArray, outputFile);
     }
 
-    public static void dumpIntoJson(String contents) {
-        try (Formatter format = new Formatter(new BufferedWriter(new FileWriter(new File("data.json"))))) {
-            format.format("%s", contents);
-
+    public static void dumpIntoJson(JSONArray contents, File outputFile) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
+            writer.writeValue(outputFile, contents);
         } catch (IOException ex) {
-
+            Logger.getLogger(TxtToJsonConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
