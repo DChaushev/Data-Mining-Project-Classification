@@ -9,10 +9,8 @@ public class Token {
     private int[] classOccurrences;
     private double[] probabilities;
 
-    public Token()
-    {
-        setProbabilities(null);
-        setClassOccurrences(null);
+    public Token() {
+        this(null, null);
     }
 
     public Token(int[] classOccurrences, double[] probabilities) {
@@ -20,16 +18,14 @@ public class Token {
         setProbabilities(probabilities);
     }
 
-    public Token (Token token)
-    {
+    public Token(Token token) {
         this(token.getClassOccurrences(), token.getProbabilities());
     }
 
     public int[] getClassOccurrences() {
         int[] tmpClassOccurrences = new int[classOccurrences.length];
 
-        for (int i = 0; i < classOccurrences.length; ++i)
-        {
+        for (int i = 0; i < classOccurrences.length; ++i) {
             tmpClassOccurrences[i] = classOccurrences[i];
         }
 
@@ -37,21 +33,13 @@ public class Token {
     }
 
     public void setClassOccurrences(int[] classOccurrences) {
-        if (classOccurrences != null)
-        {
+        if (classOccurrences != null) {
             this.classOccurrences = new int[classOccurrences.length];
-
-            for (int i = 0; i < classOccurrences.length; ++i)
-            {
-                this.classOccurrences[i] = classOccurrences[i];
-            }
-        }
-        else
-        {
+            System.arraycopy(classOccurrences, 0, this.classOccurrences, 0, classOccurrences.length);
+        } else {
             this.classOccurrences = new int[Categories.values().length];
 
-            for (int i = 0; i < this.classOccurrences.length; ++i)
-            {
+            for (int i = 0; i < this.classOccurrences.length; ++i) {
                 this.classOccurrences[i] = 0;
             }
         }
@@ -59,53 +47,36 @@ public class Token {
 
     public double[] getProbabilities() {
         double[] tmpProbabilities = new double[probabilities.length];
-
-        for (int i = 0; i < probabilities.length; ++i)
-        {
-            tmpProbabilities[i] = probabilities[i];
-        }
-
+        System.arraycopy(probabilities, 0, tmpProbabilities, 0, probabilities.length);
         return tmpProbabilities;
     }
 
     public void setProbabilities(double[] probabilities) {
-        if (probabilities != null)
-        {
+        if (probabilities != null) {
             this.probabilities = new double[probabilities.length];
-
-            for (int i = 0; i < probabilities.length; ++i)
-            {
-                this.probabilities[i] = probabilities[i];
-            }
-        }
-        else
-        {
+            System.arraycopy(probabilities, 0, this.probabilities, 0, probabilities.length);
+        } else {
             this.probabilities = new double[Categories.values().length];
 
-            for (int i = 0; i < this.probabilities.length; ++i)
-            {
+            for (int i = 0; i < this.probabilities.length; i++) {
                 this.probabilities[i] = 0.0;
             }
         }
     }
 
-    public int getOccurencesForCategory(Categories category)
-    {
+    public int getOccurencesForCategory(Categories category) {
         return this.classOccurrences[category.getCategoryValue()];
     }
 
-    public double getProbabilityForCategory(Categories category)
-    {
+    public double getProbabilityForCategory(Categories category) {
         return this.probabilities[category.getCategoryValue()];
     }
 
-    public void setOccurencesForCategory(int occurences, Categories category)
-    {
+    public void setOccurencesForCategory(int occurences, Categories category) {
         this.classOccurrences[category.getCategoryValue()] = occurences;
     }
 
-    public void setProbabilityForCategory(double probability, Categories category)
-    {
+    public void setProbabilityForCategory(double probability, Categories category) {
         this.probabilities[category.getCategoryValue()] = probability;
     }
 }

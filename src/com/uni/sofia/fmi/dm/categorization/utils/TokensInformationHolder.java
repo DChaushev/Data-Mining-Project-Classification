@@ -22,9 +22,7 @@ public class TokensInformationHolder {
     // total number of instances
     private int numberOfInstances;
 
-
-    public TokensInformationHolder()
-    {
+    public TokensInformationHolder() {
         tokens = new HashMap<>();
 
         classOccurrences = new int[Categories.values().length];
@@ -36,14 +34,14 @@ public class TokensInformationHolder {
     }
 
     /**
-     * @return returns the number of words that have occured for the given category
+     * @param category
+     * @return the number of words that have occurred for the given category
      */
     public int getNumberOfTokensForCategory(Categories category) {
         return numberOfTokens[category.getCategoryValue()];
     }
 
-    public void setNumberOfTokensForCategory(int numberOfTokens, Categories category)
-    {
+    public void setNumberOfTokensForCategory(int numberOfTokens, Categories category) {
         this.numberOfTokens[category.getCategoryValue()] = numberOfTokens;
     }
 
@@ -67,16 +65,16 @@ public class TokensInformationHolder {
         this.numberOfInstances = numberOfInstances;
     }
 
-    public void setOccurencesForCategory(int occurences, Categories category)
-    {
+    public void setOccurencesForCategory(int occurences, Categories category) {
         this.classOccurrences[category.getCategoryValue()] = occurences;
     }
 
     /**
-     * @return returns the number of instances that we have loaded for the given category
-    */
-    public int getOccurencesForCategory(Categories category)
-    {
+     * @param category
+     * @return returns the number of instances that we have loaded for the given
+     * category
+     */
+    public int getOccurencesForCategory(Categories category) {
         return this.classOccurrences[category.getCategoryValue()];
     }
 }

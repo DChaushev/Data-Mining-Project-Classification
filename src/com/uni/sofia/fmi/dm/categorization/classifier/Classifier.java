@@ -4,7 +4,6 @@ import com.uni.sofia.fmi.dm.categorization.utils.Categories;
 import com.uni.sofia.fmi.dm.categorization.utils.Token;
 import com.uni.sofia.fmi.dm.categorization.utils.TokensInformationHolder;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -13,10 +12,10 @@ import java.util.Map;
  */
 public class Classifier {
 
-    private TokensInformationHolder tih;
+    private TokensInformationHolder tokensInformationHolder;
 
-    public Classifier(TokensInformationHolder tih) {
-        this.tih = tih;
+    public Classifier(TokensInformationHolder tokensInformationHolder) {
+        this.tokensInformationHolder = tokensInformationHolder;
         calculateProbabilities();
     }
 
@@ -24,25 +23,18 @@ public class Classifier {
         return null;
     }
 
-    private void calculateProbabilities()
-    {
-        Map<String, Token> tokens = tih.getTokens();
+    private void calculateProbabilities() {
+        Map<String, Token> tokens = tokensInformationHolder.getTokens();
 
-        int sizeOfVocabulary = tokens.size();
-
-        for (Map.Entry<String, Token> entry : tokens.entrySet())
-        {
-            for(Categories category : Categories.values())
-            {
-                calculateProbability(entry.getValue(), category, sizeOfVocabulary);
+        for (Token token : tokens.values()) {
+            for (Categories category : Categories.values()) {
+                calculateProbability(token, category, tokens.size());
             }
         }
     }
 
-    private void calculateProbability(Token token, Categories category, int sizeOfVocabulary)
-    {
-        int numberOfWordsForCategory = tih.getNumberOfTokensForCategory(category);
-
+    private void calculateProbability(Token token, Categories category, int sizeOfVocabulary) {
+        int numberOfWordsForCategory = tokensInformationHolder.getNumberOfTokensForCategory(category);
         double probability = (token.getOccurencesForCategory(category) + 1) / (numberOfWordsForCategory + sizeOfVocabulary);
 
         token.setProbabilityForCategory(probability, category);

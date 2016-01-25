@@ -15,8 +15,7 @@ public enum Categories {
         this.value = value;
     }
 
-    public int getCategoryValue()
-    {
+    public int getCategoryValue() {
         return value;
     }
 }
