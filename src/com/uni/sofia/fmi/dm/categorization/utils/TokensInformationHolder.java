@@ -11,11 +11,11 @@ public class TokensInformationHolder {
 
     private Map<String, Token> tokens;
 
-    // keep here how many tokens are there for a category
+    // keeps how many tokens are there for a category
     // needed to calculate probability for a given token
     private int[] numberOfTokens;
 
-    // keep here how many instances of a given category are there
+    // keeps how many instances of a given category are there
     // needed to calculate probability of a given category
     private int[] classOccurrences;
 

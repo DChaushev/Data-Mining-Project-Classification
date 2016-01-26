@@ -7,8 +7,8 @@ public enum ParsingConstants {
 
     REVIEW_SCORE("review/score: "),
     REVIEW_TEXT("review/text: "),
-    CATEGORY("Category"),
-    TEXT("Text"),
+    CATEGORY("category"),
+    TEXT("text"),
     POSITIVE_REVIEWS("positiveReviews"),
     NEGATIVE_REVIEWS("negativeReviews"),
     REVIEWS("reviews");
@@ -19,8 +19,7 @@ public enum ParsingConstants {
         this.value = value;
     }
 
-    @Override
-    public String toString() {
+    public String getStringValue() {
         return this.value;
     }
 }

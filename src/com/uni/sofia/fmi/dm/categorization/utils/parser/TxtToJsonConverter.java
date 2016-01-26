@@ -1,10 +1,10 @@
 package com.uni.sofia.fmi.dm.categorization.utils.parser;
 
 import com.uni.sofia.fmi.dm.categorization.utils.Categories;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,21 +29,16 @@ public class TxtToJsonConverter {
      * @param outputFile
      */
     public static void convertTxtToJson(File file, File outputFile, int numberOfEntries) {
-        // TODO: MITAK check this json shit is it ok?
-        JSONArray reviews = new JSONArray();
-        JSONObject review = new JSONObject();
-
         int positiveReviews = 0;
         int negativeReviews = 0;
+        List<ReviewEntity> reviews = new ArrayList<>();
 
         try (Scanner input = new Scanner(new BufferedReader(new FileReader(file)))) {
             String line;
 
             int numberOfEntriesParsed = 0;
-
-            int prefixTextLength = ParsingConstants.REVIEW_TEXT.toString().length();
-
-            int prefixScoreLength = ParsingConstants.REVIEW_SCORE.toString().length();
+            int prefixTextLength = ParsingConstants.REVIEW_TEXT.getStringValue().length();
+            int prefixScoreLength = ParsingConstants.REVIEW_SCORE.getStringValue().length();
 
             double score = 0.0;
 
@@ -52,7 +47,7 @@ public class TxtToJsonConverter {
             while (input.hasNextLine()) {
                 line = input.nextLine();
 
-                if (line.startsWith(ParsingConstants.REVIEW_SCORE.toString())) {
+                if (line.startsWith(ParsingConstants.REVIEW_SCORE.getStringValue())) {
                     String scoreString = line.substring(prefixScoreLength);
 
                     score = Double.parseDouble(scoreString);
@@ -65,14 +60,11 @@ public class TxtToJsonConverter {
                         positiveReviews++;
                     }
 
-                } else if (line.startsWith(ParsingConstants.REVIEW_TEXT.toString()) && (score != 3.0)) {
+                } else if (line.startsWith(ParsingConstants.REVIEW_TEXT.getStringValue()) && (score != 3.0)) {
                     if (numberOfEntriesParsed < numberOfEntries) {
                         String text = line.substring(prefixTextLength);
 
-                        review.put(ParsingConstants.CATEGORY.toString(), currentCategory.toString());
-                        review.put(ParsingConstants.TEXT.toString(), text);
-
-                        reviews.add(new JSONObject(review));
+                        reviews.add(new ReviewEntity(currentCategory, text));
 
                         numberOfEntriesParsed++;
                     } else {
@@ -84,12 +76,7 @@ public class TxtToJsonConverter {
             Logger.getLogger(TxtToJsonConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        JSONObject result = new JSONObject();
-        result.put(ParsingConstants.POSITIVE_REVIEWS, positiveReviews);
-        result.put(ParsingConstants.NEGATIVE_REVIEWS, negativeReviews);
-        result.put(ParsingConstants.REVIEWS, reviews);
-
-        dumpIntoJson(result, outputFile);
+        dumpIntoJson(new JsonFileEntity(negativeReviews, positiveReviews, reviews), outputFile);
     }
 
     public static void dumpIntoJson(Object contents, File outputFile) {
