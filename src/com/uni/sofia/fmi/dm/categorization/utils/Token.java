@@ -1,5 +1,7 @@
 package com.uni.sofia.fmi.dm.categorization.utils;
 
+import java.util.Arrays;
+
 /**
  *
  * @author Dimitar
@@ -78,5 +80,19 @@ public class Token {
 
     public void setProbabilityForCategory(double probability, Categories category) {
         this.probabilities[category.getCategoryValue()] = probability;
+    }
+
+    /**
+     * Increment the ocurrences for a given category by 1
+     * @param category - the category for which the occurences to be incremented
+     */
+    public void incrementOccurencesForCategory (Categories category)
+    {
+        classOccurrences[category.getCategoryValue()]++;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Class occurences: %s\nProbabilities: %s\n", Arrays.toString(classOccurrences), Arrays.toString(probabilities));
     }
 }

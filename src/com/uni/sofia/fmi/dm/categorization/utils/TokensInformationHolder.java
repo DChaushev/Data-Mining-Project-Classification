@@ -1,5 +1,6 @@
 package com.uni.sofia.fmi.dm.categorization.utils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,11 +71,45 @@ public class TokensInformationHolder {
     }
 
     /**
+     * By a given category increment by 1 the number of tokens occured for that category
+     * @param category - the category for which the number of tokens to be updated
+     */
+    private void incrementNumberOfTokensForCategory(Categories category)
+    {
+        numberOfTokens[category.getCategoryValue()]++;
+    }
+
+    /**
      * @param category
      * @return returns the number of instances that we have loaded for the given
      * category
      */
     public int getOccurencesForCategory(Categories category) {
         return this.classOccurrences[category.getCategoryValue()];
+    }
+
+    /**
+     * Given a token and a category this updates an entry or adds one
+     * @param token - token to be updated or added
+     * @param category - the category for the token
+     */
+    public void handleToken(String token, Categories category)
+    {
+        incrementNumberOfTokensForCategory(category);
+
+        Token currentToken = tokens.get(token);
+
+        if (currentToken == null)
+        {
+            currentToken = new Token();
+            tokens.put(token, currentToken);
+        }
+
+        currentToken.incrementOccurencesForCategory(category);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Total number of instances: %d\nNumber of tokens: %s\nData: %s", numberOfInstances, Arrays.toString(numberOfTokens), tokens);
     }
 }

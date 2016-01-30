@@ -45,6 +45,12 @@ public class TxtToJsonConverter {
             Categories currentCategory = Categories.NEGATIVE;
 
             while (input.hasNextLine()) {
+
+                if (numberOfEntriesParsed >= numberOfEntries)
+                {
+                    break;
+                }
+
                 line = input.nextLine();
 
                 if (line.startsWith(ParsingConstants.REVIEW_SCORE.getStringValue())) {
@@ -61,15 +67,12 @@ public class TxtToJsonConverter {
                     }
 
                 } else if (line.startsWith(ParsingConstants.REVIEW_TEXT.getStringValue()) && (score != 3.0)) {
-                    if (numberOfEntriesParsed < numberOfEntries) {
-                        String text = line.substring(prefixTextLength);
 
-                        reviews.add(new ReviewEntity(currentCategory, text));
+                    String text = line.substring(prefixTextLength);
 
-                        numberOfEntriesParsed++;
-                    } else {
-                        break;
-                    }
+                    reviews.add(new ReviewEntity(currentCategory, text));
+
+                    numberOfEntriesParsed++;
                 }
             }
         } catch (IOException ex) {
