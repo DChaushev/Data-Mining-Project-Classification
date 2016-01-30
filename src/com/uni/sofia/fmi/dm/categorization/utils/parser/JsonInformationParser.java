@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.uni.sofia.fmi.dm.categorization.utils.parser.wordParser.WordParser;
 import org.codehaus.jackson.map.ObjectMapper;
 
 /**
@@ -37,16 +38,14 @@ public class JsonInformationParser implements InformationParser {
 
             List<ReviewEntity> reviews = jsonFileEntity.getReviews();
 
-            // I think this removes some noise in the data.
-            // The - and ' are for words in the case "ala-bala" and "it's"
-            // TODO see if this is a good regular expression
-            Pattern wordPattern = Pattern.compile("(\\w+[-']\\w+)|(\\w+)");
+
+            WordParser wordParser = new WordParser();
 
             for (ReviewEntity review : reviews) {
                 String text = review.getText();
                 Categories reviewCategory = review.getCategory();
 
-                Matcher matcher = wordPattern.matcher(text);
+                Matcher matcher = wordParser.getMatcherForString(text);
                 //String[] stringTokens = text.split(" ");
 
                 while(matcher.find())
