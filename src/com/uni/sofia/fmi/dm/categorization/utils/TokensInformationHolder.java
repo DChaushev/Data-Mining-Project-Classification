@@ -108,6 +108,23 @@ public class TokensInformationHolder {
         currentToken.incrementOccurencesForCategory(category);
     }
 
+    public double getProbabilityForCategory(Categories category)
+    {
+        return classOccurrences[category.getCategoryValue()] / numberOfInstances;
+    }
+
+    public double getProbabilityForToken(String token, Categories category)
+    {
+        Token currentToken = tokens.get(token);
+
+        if (currentToken == null)
+        {
+            return  Double.MIN_VALUE;
+        }
+
+        return currentToken.getProbabilityForCategory(category);
+    }
+
     @Override
     public String toString() {
         return String.format("Total number of instances: %d\nNumber of tokens: %s\nData: %s", numberOfInstances, Arrays.toString(numberOfTokens), tokens);
