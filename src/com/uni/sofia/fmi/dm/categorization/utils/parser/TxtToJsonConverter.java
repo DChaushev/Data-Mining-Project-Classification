@@ -44,10 +44,27 @@ public class TxtToJsonConverter {
 
             Categories currentCategory = Categories.NEGATIVE;
 
+            boolean searchPositiveOnly = false;
+            boolean searchNegativeOnly = false;
+            boolean skipText = false;
+
+            // if some of the categories get 60% of what we want to convert stop handling that category and
+            // handle only the other categories
+            int maxReviewsForCategory = (int)(0.6d * numberOfEntries);
+
             while (input.hasNextLine()) {
 
                 if (numberOfEntriesParsed >= numberOfEntries) {
                     break;
+                }
+
+                if (positiveReviews >= maxReviewsForCategory)
+                {
+                    searchNegativeOnly = true;
+                }
+                else if (negativeReviews >= numberOfEntries)
+                {
+                    searchPositiveOnly = true;
                 }
 
                 line = input.nextLine();
@@ -58,14 +75,34 @@ public class TxtToJsonConverter {
                     score = Double.parseDouble(scoreString);
 
                     if (score < 3.0) {
-                        currentCategory = Categories.NEGATIVE;
-                        negativeReviews++;
+                        if (!searchPositiveOnly)
+                        {
+                            currentCategory = Categories.NEGATIVE;
+                            negativeReviews++;
+                            skipText = false;
+                        }
+                        else
+                        {
+                            skipText = true;
+                        }
                     } else if (score > 3.0) {
-                        currentCategory = Categories.POSITIVE;
-                        positiveReviews++;
+                        if (!searchNegativeOnly)
+                        {
+                            currentCategory = Categories.POSITIVE;
+                            positiveReviews++;
+                            skipText = false;
+                        }
+                        else
+                        {
+                            skipText = true;
+                        }
+                    }
+                    else
+                    {
+                        skipText = true;
                     }
 
-                } else if (line.startsWith(ParsingConstants.REVIEW_TEXT.getStringValue()) && (score != 3.0)) {
+                } else if (line.startsWith(ParsingConstants.REVIEW_TEXT.getStringValue()) && !skipText) {
 
                     String text = line.substring(prefixTextLength);
 
@@ -90,5 +127,4 @@ public class TxtToJsonConverter {
             Logger.getLogger(TxtToJsonConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 }
