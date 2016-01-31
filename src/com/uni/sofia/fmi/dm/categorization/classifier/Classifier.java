@@ -42,7 +42,7 @@ public class Classifier {
             }
         }
 
-        double currentMax = Double.MIN_VALUE;
+        double currentMax = 0.0d;
         Categories classifiedCategory = Categories.POSITIVE;
 
         for (Categories category : Categories.values()) {

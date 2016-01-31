@@ -124,6 +124,17 @@ public class TokensInformationHolder implements Serializable {
         return currentToken.getProbabilityForCategory(category);
     }
 
+    public double[] getProbabilitiesForToken(String token)
+    {
+        Token currentToken = tokens.get(token);
+
+        if (currentToken == null) {
+            return null;
+        }
+
+        return currentToken.getProbabilities();
+    }
+
     @Override
     public String toString() {
         return String.format("Total number of instances: %d\nNumber of tokens: %s\nData: %s", numberOfInstances, Arrays.toString(numberOfTokens), tokens);
