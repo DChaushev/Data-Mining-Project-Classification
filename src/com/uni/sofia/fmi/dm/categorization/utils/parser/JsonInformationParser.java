@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
 import com.uni.sofia.fmi.dm.categorization.utils.parser.wordParser.WordParser;
-import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  *
@@ -25,11 +24,10 @@ public class JsonInformationParser implements InformationParser {
 
     @Override
     public TokensInformationHolder parse(File file) {
-        ObjectMapper mapper = new ObjectMapper();
         TokensInformationHolder resultHolder = new TokensInformationHolder();
 
         try {
-            JsonFileEntity jsonFileEntity = mapper.readValue(file, JsonFileEntity.class);
+            JsonFileEntity jsonFileEntity = (JsonFileEntity) ObjectMapperWrapper.readFile(file, JsonFileEntity.class);
 
             resultHolder.setOccurencesForCategory(jsonFileEntity.getPositiveReviews(), Categories.POSITIVE);
             resultHolder.setOccurencesForCategory(jsonFileEntity.getNegativeReviews(), Categories.NEGATIVE);

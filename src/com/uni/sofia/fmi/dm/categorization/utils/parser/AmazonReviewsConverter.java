@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
 
 /**
  * Created by vankata on 24.01.16.
@@ -109,9 +107,7 @@ public class AmazonReviewsConverter {
 
     private static void dumpIntoJson(Object contents, File outputFile) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-            writer.writeValue(outputFile, contents);
+            ObjectMapperWrapper.writeObject(contents, outputFile);
         } catch (IOException ex) {
             Logger.getLogger(AmazonReviewsConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
