@@ -14,15 +14,14 @@ import java.util.regex.Matcher;
  */
 public class Classifier {
 
-    private TokensInformationHolder tokensInformationHolder;
+    private final TokensInformationHolder tokensInformationHolder;
 
     public Classifier(TokensInformationHolder tokensInformationHolder) {
         this.tokensInformationHolder = tokensInformationHolder;
         calculateProbabilities();
     }
 
-    public Categories classify(String text)
-    {
+    public Categories classify(String text) {
         WordParser wordParser = new WordParser();
 
         Matcher matcher = wordParser.getMatcherForString(text);
@@ -30,17 +29,14 @@ public class Classifier {
         double probabilities[] = new double[Categories.values().length];
 
         // lets initialize the probabilities array with the probability that a category can occur
-        for (Categories category : Categories.values())
-        {
+        for (Categories category : Categories.values()) {
             probabilities[category.getCategoryValue()] = tokensInformationHolder.getProbabilityForCategory(category);
         }
 
-        while (matcher.find())
-        {
+        while (matcher.find()) {
             String token = matcher.group();
 
-            for (Categories category : Categories.values())
-            {
+            for (Categories category : Categories.values()) {
                 probabilities[category.getCategoryValue()] *= tokensInformationHolder.getProbabilityForToken(token, category);
             }
         }
@@ -48,10 +44,8 @@ public class Classifier {
         double currentMax = 0.0;
         Categories classifiedCategory = Categories.POSITIVE;
 
-        for (Categories category : Categories.values())
-        {
-            if (currentMax < probabilities[category.getCategoryValue()])
-            {
+        for (Categories category : Categories.values()) {
+            if (currentMax < probabilities[category.getCategoryValue()]) {
                 currentMax = probabilities[category.getCategoryValue()];
                 classifiedCategory = category;
             }

@@ -84,10 +84,10 @@ public class Token {
 
     /**
      * Increment the ocurrences for a given category by 1
+     *
      * @param category - the category for which the occurences to be incremented
      */
-    public void incrementOccurencesForCategory (Categories category)
-    {
+    public void incrementOccurencesForCategory(Categories category) {
         classOccurrences[category.getCategoryValue()]++;
     }
 

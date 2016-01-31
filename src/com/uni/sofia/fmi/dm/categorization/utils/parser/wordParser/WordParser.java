@@ -10,21 +10,18 @@ public class WordParser {
 
     private Pattern wordPattern;
 
-    public WordParser()
-    {
+    public WordParser() {
         // I think this removes some noise in the data.
         // The - and ' are for words in the case "ala-bala" and "it's"
         // TODO see if this is a good regular expression
         this("(\\w+[-']\\w+)|(\\w+)");
     }
 
-    public WordParser(String regex)
-    {
+    public WordParser(String regex) {
         wordPattern = Pattern.compile(regex);
     }
 
-    public Matcher getMatcherForString(String text)
-    {
+    public Matcher getMatcherForString(String text) {
         return wordPattern.matcher(text);
     }
 

@@ -46,8 +46,7 @@ public class TxtToJsonConverter {
 
             while (input.hasNextLine()) {
 
-                if (numberOfEntriesParsed >= numberOfEntries)
-                {
+                if (numberOfEntriesParsed >= numberOfEntries) {
                     break;
                 }
 

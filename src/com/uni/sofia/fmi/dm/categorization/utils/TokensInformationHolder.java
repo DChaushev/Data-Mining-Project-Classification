@@ -71,11 +71,13 @@ public class TokensInformationHolder {
     }
 
     /**
-     * By a given category increment by 1 the number of tokens occured for that category
-     * @param category - the category for which the number of tokens to be updated
+     * By a given category increment by 1 the number of tokens occured for that
+     * category
+     *
+     * @param category - the category for which the number of tokens to be
+     * updated
      */
-    private void incrementNumberOfTokensForCategory(Categories category)
-    {
+    private void incrementNumberOfTokensForCategory(Categories category) {
         numberOfTokens[category.getCategoryValue()]++;
     }
 
@@ -90,17 +92,16 @@ public class TokensInformationHolder {
 
     /**
      * Given a token and a category this updates an entry or adds one
+     *
      * @param token - token to be updated or added
      * @param category - the category for the token
      */
-    public void handleToken(String token, Categories category)
-    {
+    public void handleToken(String token, Categories category) {
         incrementNumberOfTokensForCategory(category);
 
         Token currentToken = tokens.get(token);
 
-        if (currentToken == null)
-        {
+        if (currentToken == null) {
             currentToken = new Token();
             tokens.put(token, currentToken);
         }
@@ -108,18 +109,15 @@ public class TokensInformationHolder {
         currentToken.incrementOccurencesForCategory(category);
     }
 
-    public double getProbabilityForCategory(Categories category)
-    {
+    public double getProbabilityForCategory(Categories category) {
         return classOccurrences[category.getCategoryValue()] / numberOfInstances;
     }
 
-    public double getProbabilityForToken(String token, Categories category)
-    {
+    public double getProbabilityForToken(String token, Categories category) {
         Token currentToken = tokens.get(token);
 
-        if (currentToken == null)
-        {
-            return  Double.MIN_VALUE;
+        if (currentToken == null) {
+            return Double.MIN_VALUE;
         }
 
         return currentToken.getProbabilityForCategory(category);
