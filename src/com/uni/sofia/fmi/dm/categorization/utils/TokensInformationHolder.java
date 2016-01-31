@@ -1,5 +1,6 @@
 package com.uni.sofia.fmi.dm.categorization.utils;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.Map;
  *
  * @author Dimitar
  */
-public class TokensInformationHolder {
+public class TokensInformationHolder implements Serializable {
 
     private Map<String, Token> tokens;
 

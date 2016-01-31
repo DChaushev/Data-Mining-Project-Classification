@@ -1,12 +1,13 @@
 package com.uni.sofia.fmi.dm.categorization.utils;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  *
  * @author Dimitar
  */
-public class Token {
+public class Token implements Serializable{
 
     private int[] classOccurrences;
     private double[] probabilities;
