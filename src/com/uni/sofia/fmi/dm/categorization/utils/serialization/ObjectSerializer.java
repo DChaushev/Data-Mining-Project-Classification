@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 public class ObjectSerializer {
 
     private static final File SERIALIZATION_FOLDER = new File("serialized");
+
+    private static final String FILENAME_FORMAT = "%d%d";
     private static final String SER_SUFFIX = ".ser";
 
     public static String serialize(Object object) {
@@ -24,7 +26,7 @@ public class ObjectSerializer {
             SERIALIZATION_FOLDER.mkdir();
         }
 
-        String fileName = String.valueOf(object.hashCode());
+        String fileName = String.format(FILENAME_FORMAT, System.currentTimeMillis(), object.hashCode());
         File fullPath = new File(SERIALIZATION_FOLDER, fileName + SER_SUFFIX);
 
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fullPath))) {
