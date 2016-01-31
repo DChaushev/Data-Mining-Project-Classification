@@ -27,54 +27,42 @@ public class ChoiceHandler {
         this.wordParser = new WordParser();
     }
 
-    public void handleChoice(int option)
-    {
-        switch (option)
-        {
-            case 1:
-            {
+    public void handleChoice(int option) {
+        switch (option) {
+            case 1: {
                 handleClassifyText();
                 break;
             }
-            case 2:
-            {
+            case 2: {
                 handleProbabilitiesForLastText();
                 break;
             }
-            case 3:
-            {
+            case 3: {
                 handleSizeOfVocabulary();
                 break;
             }
-            case 4:
-            {
+            case 4: {
                 handleExit();
                 break;
             }
-            default:
-            {
+            default: {
                 System.out.println("No such option!!!");
             }
         }
     }
 
-    private void handleClassifyText()
-    {
+    private void handleClassifyText() {
         System.out.println("Enter text to be classified:");
 
         String textToClassify;
 
-        while (true)
-        {
+        while (true) {
             textToClassify = input.nextLine();
 
-            if (textToClassify.isEmpty() || ( textToClassify.compareToIgnoreCase(" ") == 0) )
-            {
+            if (textToClassify.isEmpty() || (textToClassify.compareToIgnoreCase(" ") == 0)) {
                 System.out.println("Not valid input!!!");
                 System.out.println("Enter text to be classified:");
-            }
-            else
-            {
+            } else {
                 break;
             }
         }
@@ -84,35 +72,35 @@ public class ChoiceHandler {
         lastClassifiedText = textToClassify;
     }
 
-    private void handleExit()
-    {
+    private void handleExit() {
         System.exit(0);
     }
 
-    private void handleProbabilitiesForLastText()
-    {
+    private void handleProbabilitiesForLastText() {
+        if (lastClassifiedText == null) {
+            System.out.println("There is nothing classified!");
+            return;
+        }
+
         System.out.println("Word\t[Positive probability, Negative probability]");
 
         Matcher matcher = wordParser.getMatcherForString(lastClassifiedText);
 
-        while (matcher.find())
-        {
+        while (matcher.find()) {
             String token = matcher.group();
+            token = token.toLowerCase();
+
             double[] probabilities = tokensHolder.getProbabilitiesForToken(token);
 
-            if (probabilities == null)
-            {
-               System.out.println(String.format("%s\t[%f, %f]", token, Double.MIN_VALUE, Double.MIN_VALUE));
-            }
-            else
-            {
+            if (probabilities == null) {
+                System.out.println(String.format("%s\t[%f, %f]", token, Double.MIN_VALUE, Double.MIN_VALUE));
+            } else {
                 System.out.println(String.format("%s\t%s", token, Arrays.toString(probabilities)));
             }
         }
     }
 
-    private void handleSizeOfVocabulary()
-    {
+    private void handleSizeOfVocabulary() {
         System.out.println(tokensHolder.getTokens().size());
     }
 

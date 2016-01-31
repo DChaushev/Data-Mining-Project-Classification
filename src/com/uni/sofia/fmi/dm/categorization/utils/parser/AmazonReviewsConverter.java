@@ -14,7 +14,7 @@ import org.codehaus.jackson.map.ObjectWriter;
 /**
  * Created by vankata on 24.01.16.
  */
-public class TxtToJsonConverter {
+public class AmazonReviewsConverter {
 
     public static void convertTxtToJson(String url, String outputFileName, int numberOfEntries) {
         convertTxtToJson(new File(url), new File(outputFileName), numberOfEntries);
@@ -50,7 +50,7 @@ public class TxtToJsonConverter {
 
             // if some of the categories get 60% of what we want to convert stop handling that category and
             // handle only the other categories
-            int maxReviewsForCategory = (int)(0.6d * numberOfEntries);
+            int maxReviewsForCategory = (int) (0.6d * numberOfEntries);
 
             while (input.hasNextLine()) {
 
@@ -58,12 +58,9 @@ public class TxtToJsonConverter {
                     break;
                 }
 
-                if (positiveReviews >= maxReviewsForCategory)
-                {
+                if (positiveReviews >= maxReviewsForCategory) {
                     searchNegativeOnly = true;
-                }
-                else if (negativeReviews >= numberOfEntries)
-                {
+                } else if (negativeReviews >= numberOfEntries) {
                     searchPositiveOnly = true;
                 }
 
@@ -75,30 +72,22 @@ public class TxtToJsonConverter {
                     score = Double.parseDouble(scoreString);
 
                     if (score < 3.0) {
-                        if (!searchPositiveOnly)
-                        {
+                        if (!searchPositiveOnly) {
                             currentCategory = Categories.NEGATIVE;
                             negativeReviews++;
                             skipText = false;
-                        }
-                        else
-                        {
+                        } else {
                             skipText = true;
                         }
                     } else if (score > 3.0) {
-                        if (!searchNegativeOnly)
-                        {
+                        if (!searchNegativeOnly) {
                             currentCategory = Categories.POSITIVE;
                             positiveReviews++;
                             skipText = false;
-                        }
-                        else
-                        {
+                        } else {
                             skipText = true;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         skipText = true;
                     }
 
@@ -112,19 +101,19 @@ public class TxtToJsonConverter {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(TxtToJsonConverter.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AmazonReviewsConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         dumpIntoJson(new JsonFileEntity(negativeReviews, positiveReviews, reviews), outputFile);
     }
 
-    public static void dumpIntoJson(Object contents, File outputFile) {
+    private static void dumpIntoJson(Object contents, File outputFile) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
             writer.writeValue(outputFile, contents);
         } catch (IOException ex) {
-            Logger.getLogger(TxtToJsonConverter.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AmazonReviewsConverter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -47,6 +47,8 @@ public class JsonInformationParser implements InformationParser {
 
                 while (matcher.find()) {
                     String token = matcher.group();
+                    token = token.toLowerCase();
+
                     resultHolder.handleToken(token, reviewCategory);
                 }
             }
