@@ -111,7 +111,7 @@ public class TokensInformationHolder implements Serializable {
     }
 
     public double getProbabilityForCategory(Categories category) {
-        return classOccurrences[category.getCategoryValue()] / numberOfInstances;
+        return classOccurrences[category.getCategoryValue()] / (double)numberOfInstances;
     }
 
     public double getProbabilityForToken(String token, Categories category) {

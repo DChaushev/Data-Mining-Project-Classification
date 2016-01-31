@@ -6,6 +6,7 @@ import com.uni.sofia.fmi.dm.categorization.utils.TokensInformationHolder;
 import com.uni.sofia.fmi.dm.categorization.utils.parser.wordParser.WordParser;
 
 import java.util.Map;
+import java.util.concurrent.atomic.DoubleAccumulator;
 import java.util.regex.Matcher;
 
 /**
@@ -41,7 +42,7 @@ public class Classifier {
             }
         }
 
-        double currentMax = 0.0;
+        double currentMax = Double.MIN_VALUE;
         Categories classifiedCategory = Categories.POSITIVE;
 
         for (Categories category : Categories.values()) {
@@ -66,7 +67,7 @@ public class Classifier {
 
     private void calculateProbability(Token token, Categories category, int sizeOfVocabulary) {
         int numberOfWordsForCategory = tokensInformationHolder.getNumberOfTokensForCategory(category);
-        double probability = (token.getOccurencesForCategory(category) + 1) / (numberOfWordsForCategory + sizeOfVocabulary);
+        double probability = (token.getOccurencesForCategory(category) + 1) / (double)(numberOfWordsForCategory + sizeOfVocabulary);
 
         token.setProbabilityForCategory(probability, category);
     }
