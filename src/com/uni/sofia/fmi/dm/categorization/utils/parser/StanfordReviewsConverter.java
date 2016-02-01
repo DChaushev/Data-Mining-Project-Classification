@@ -1,12 +1,10 @@
 package com.uni.sofia.fmi.dm.categorization.utils.parser;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import com.uni.sofia.fmi.dm.categorization.utils.Categories;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -1,6 +1,6 @@
 package com.uni.sofia.fmi.dm.categorization.utils.parser;
 
-import com.uni.sofia.fmi.dm.categorization.utils.TokensInformationHolder;
+import com.uni.sofia.fmi.dm.categorization.utils.TokensHolder;
 import java.io.File;
 
 /**
@@ -9,7 +9,7 @@ import java.io.File;
  */
 public interface InformationParser {
 
-    TokensInformationHolder parse(String url);
-
-    TokensInformationHolder parse(File files);
+    TokensHolder parse(String url);
+    
+    TokensHolder parse(File file);
 }

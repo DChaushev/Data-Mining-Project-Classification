@@ -2,10 +2,9 @@ package com.uni.sofia.fmi.dm.categorization.classifier;
 
 import com.uni.sofia.fmi.dm.categorization.utils.Categories;
 import com.uni.sofia.fmi.dm.categorization.utils.Token;
-import com.uni.sofia.fmi.dm.categorization.utils.TokensInformationHolder;
+import com.uni.sofia.fmi.dm.categorization.utils.TokensHolder;
 import com.uni.sofia.fmi.dm.categorization.utils.parser.wordParser.WordParser;
 
-import java.util.Map;
 import java.util.regex.Matcher;
 
 /**
@@ -14,61 +13,70 @@ import java.util.regex.Matcher;
  */
 public class Classifier {
 
-    private final TokensInformationHolder tokensInformationHolder;
+    private TokensHolder tokensHolder;
 
-    public Classifier(TokensInformationHolder tokensInformationHolder) {
-        this.tokensInformationHolder = tokensInformationHolder;
-        calculateProbabilities();
+    public Classifier(TokensHolder tokensHolder) {
+        this.tokensHolder = tokensHolder;
     }
 
     public Categories classify(String text) {
-        WordParser wordParser = new WordParser();
+        return classify(text, false);
+    }
 
-        Matcher matcher = wordParser.getMatcherForString(text);
+    public Categories classify(String text, boolean verbose) {
+        Matcher matcher = new WordParser().getMatcherForString(text);
 
-        double probabilities[] = new double[Categories.values().length];
+        int numberOfClasses = this.tokensHolder.getNumberOfClasses();
+        double[] classProbabilities = new double[numberOfClasses];
 
-        // lets initialize the probabilities array with the probability that a category can occur
-        for (Categories category : Categories.values()) {
-            probabilities[category.getCategoryValue()] = tokensInformationHolder.getProbabilityForCategory(category);
+        for (int i = 0; i < numberOfClasses; i++) {
+            classProbabilities[i] = this.tokensHolder.getProbabilityForClass(i);
         }
 
         while (matcher.find()) {
-            String token = matcher.group();
-            token = token.toLowerCase();
+            String tokenKey = matcher.group();
+            tokenKey = tokenKey.toLowerCase();
+            Token token = tokensHolder.getToken(tokenKey);
 
-            for (Categories category : Categories.values()) {
-                probabilities[category.getCategoryValue()] *= tokensInformationHolder.getProbabilityForToken(token, category);
+            if (token != null) {
+                for (int i = 0; i < numberOfClasses; i++) {
+                    if (verbose) {
+                        System.out.print("P(" + tokenKey + " | " + i + ") = ");
+                    }
+                    classProbabilities[i] *= calculateProbability(token, i, verbose);
+                }
             }
         }
 
-        double currentMax = 0.0d;
-        Categories classifiedCategory = Categories.POSITIVE;
-
-        for (Categories category : Categories.values()) {
-            if (currentMax < probabilities[category.getCategoryValue()]) {
-                currentMax = probabilities[category.getCategoryValue()];
-                classifiedCategory = category;
+        int index = 0;
+        double currentMax = 0;
+        for (int i = 0; i < classProbabilities.length; i++) {
+            if (currentMax < classProbabilities[i]) {
+                index = i;
+                currentMax = classProbabilities[i];
             }
         }
 
-        return classifiedCategory;
+        return Categories.values()[index];
     }
 
-    private void calculateProbabilities() {
-        Map<String, Token> tokens = tokensInformationHolder.getTokens();
-
-        for (Token token : tokens.values()) {
-            for (Categories category : Categories.values()) {
-                calculateProbability(token, category, tokens.size());
-            }
-        }
+    public TokensHolder getTokensHolder() {
+        return tokensHolder;
     }
 
-    private void calculateProbability(Token token, Categories category, int sizeOfVocabulary) {
-        int numberOfWordsForCategory = tokensInformationHolder.getNumberOfTokensForCategory(category);
-        double probability = (token.getOccurencesForCategory(category) + 1) / (double) (numberOfWordsForCategory + sizeOfVocabulary);
+    public void setTokensHolder(TokensHolder tokensHolder) {
+        this.tokensHolder = tokensHolder;
+    }
 
-        token.setProbabilityForCategory(probability, category);
+    private double calculateProbability(Token token, int clazz, boolean verbose) {
+        int vocabularySize = tokensHolder.getVocabularySize();
+        int numberOfTokensForClass = tokensHolder.getNumberOfInstancesPerClass(clazz);
+        int numberOfTokenClassOccurances = token.getOccurencesForClass(clazz);
+
+        if (verbose) {
+            System.out.print(String.format("(%d + 1) / (%d + %d)", numberOfTokenClassOccurances, vocabularySize, numberOfTokensForClass));
+            System.out.println(" = " + (double) (numberOfTokenClassOccurances + 1) / (vocabularySize + numberOfTokensForClass));
+        }
+        return (double) (numberOfTokenClassOccurances + 1) / (vocabularySize + numberOfTokensForClass);
     }
 }

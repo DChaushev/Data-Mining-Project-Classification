@@ -1,7 +1,8 @@
 package com.uni.sofia.fmi.dm.categorization.utils.parser;
 
 import com.uni.sofia.fmi.dm.categorization.utils.Categories;
-import com.uni.sofia.fmi.dm.categorization.utils.TokensInformationHolder;
+import com.uni.sofia.fmi.dm.categorization.utils.Token;
+import com.uni.sofia.fmi.dm.categorization.utils.TokensHolder;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 
 import com.uni.sofia.fmi.dm.categorization.utils.parser.wordParser.WordParser;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -18,20 +21,16 @@ import com.uni.sofia.fmi.dm.categorization.utils.parser.wordParser.WordParser;
 public class JsonInformationParser implements InformationParser {
 
     @Override
-    public TokensInformationHolder parse(String url) {
+    public TokensHolder parse(String url) {
         return this.parse(new File(url));
     }
 
     @Override
-    public TokensInformationHolder parse(File file) {
-        TokensInformationHolder resultHolder = new TokensInformationHolder();
+    public TokensHolder parse(File file) {
 
         try {
             JsonFileEntity jsonFileEntity = (JsonFileEntity) ObjectMapperWrapper.readFile(file, JsonFileEntity.class);
-
-            resultHolder.setOccurencesForCategory(jsonFileEntity.getPositiveReviews(), Categories.POSITIVE);
-            resultHolder.setOccurencesForCategory(jsonFileEntity.getNegativeReviews(), Categories.NEGATIVE);
-            resultHolder.setNumberOfInstances(jsonFileEntity.getNegativeReviews() + jsonFileEntity.getPositiveReviews());
+            Map<String, Token> tokens = new HashMap<>();
 
             List<ReviewEntity> reviews = jsonFileEntity.getReviews();
 
@@ -46,16 +45,25 @@ public class JsonInformationParser implements InformationParser {
                 while (matcher.find()) {
                     String token = matcher.group();
                     token = token.toLowerCase();
-
-                    resultHolder.handleToken(token, reviewCategory);
+                    handleToken(token, tokens, reviewCategory.getCategoryValue());
                 }
             }
+
+            return new TokensHolder(tokens, new int[]{jsonFileEntity.getPositiveReviews(), jsonFileEntity.getNegativeReviews()}, reviews.size());
 
         } catch (IOException ex) {
             Logger.getLogger(JsonInformationParser.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return resultHolder;
+        return null;
+    }
+
+    private void handleToken(String token, Map<String, Token> tokens, int categoryValue) {
+        if (!tokens.containsKey(token)) {
+            tokens.put(token, new Token(Categories.values().length));
+        }
+
+        tokens.get(token).incrementOccurencesForCategory(categoryValue);
     }
 
 }

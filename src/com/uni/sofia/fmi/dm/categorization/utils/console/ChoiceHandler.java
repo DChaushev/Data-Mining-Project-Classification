@@ -1,25 +1,23 @@
 package com.uni.sofia.fmi.dm.categorization.utils.console;
 
 import com.uni.sofia.fmi.dm.categorization.classifier.Classifier;
-import com.uni.sofia.fmi.dm.categorization.utils.TokensInformationHolder;
+import com.uni.sofia.fmi.dm.categorization.utils.TokensHolder;
 import com.uni.sofia.fmi.dm.categorization.utils.parser.wordParser.WordParser;
 
-import java.util.Arrays;
 import java.util.Scanner;
-import java.util.regex.Matcher;
 
 /**
  * Created by vankata on 31.01.16.
  */
 public class ChoiceHandler {
 
-    private TokensInformationHolder tokensHolder;
+    private TokensHolder tokensHolder;
     private Classifier classifier;
     private String lastClassifiedText;
     private Scanner input;
     private WordParser wordParser;
 
-    public ChoiceHandler(TokensInformationHolder tokensHolder, Classifier classifier) {
+    public ChoiceHandler(TokensHolder tokensHolder, Classifier classifier) {
         this.tokensHolder = tokensHolder;
         this.classifier = classifier;
         this.lastClassifiedText = null;
@@ -82,26 +80,11 @@ public class ChoiceHandler {
             return;
         }
 
-        System.out.println("Word\t[Positive probability, Negative probability]");
-
-        Matcher matcher = wordParser.getMatcherForString(lastClassifiedText);
-
-        while (matcher.find()) {
-            String token = matcher.group();
-            token = token.toLowerCase();
-
-            double[] probabilities = tokensHolder.getProbabilitiesForToken(token);
-
-            if (probabilities == null) {
-                System.out.println(String.format("%s\t[%f, %f]", token, Double.MIN_VALUE, Double.MIN_VALUE));
-            } else {
-                System.out.println(String.format("%s\t%s", token, Arrays.toString(probabilities)));
-            }
-        }
+        classifier.classify(lastClassifiedText, true);
     }
 
     private void handleSizeOfVocabulary() {
-        System.out.println(tokensHolder.getTokens().size());
+        System.out.println(tokensHolder.getVocabularySize());
     }
 
 }
