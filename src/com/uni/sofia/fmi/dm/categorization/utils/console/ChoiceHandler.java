@@ -1,28 +1,43 @@
 package com.uni.sofia.fmi.dm.categorization.utils.console;
 
 import com.uni.sofia.fmi.dm.categorization.classifier.Classifier;
+import com.uni.sofia.fmi.dm.categorization.classifier.ValidationResponse;
+import com.uni.sofia.fmi.dm.categorization.classifier.Validator;
 import com.uni.sofia.fmi.dm.categorization.utils.TokensHolder;
+import com.uni.sofia.fmi.dm.categorization.utils.parser.JsonFileEntity;
+import com.uni.sofia.fmi.dm.categorization.utils.parser.ObjectMapperWrapper;
 import com.uni.sofia.fmi.dm.categorization.utils.parser.wordParser.WordParser;
+import java.io.File;
+import java.io.IOException;
 
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by vankata on 31.01.16.
  */
 public class ChoiceHandler {
 
-    private TokensHolder tokensHolder;
-    private Classifier classifier;
-    private String lastClassifiedText;
-    private Scanner input;
-    private WordParser wordParser;
+    private static final String TEST_DATA_JSON = "stanfordDataTest.json";
 
-    public ChoiceHandler(TokensHolder tokensHolder, Classifier classifier) {
+    private final TokensHolder tokensHolder;
+    private final Classifier classifier;
+    private String lastClassifiedText;
+    private final Scanner input;
+    private final WordParser wordParser;
+
+    private final JsonFileEntity testingSet;
+    private final Validator validator;
+
+    public ChoiceHandler(TokensHolder tokensHolder, Classifier classifier) throws IOException {
         this.tokensHolder = tokensHolder;
         this.classifier = classifier;
         this.lastClassifiedText = null;
         this.input = new Scanner(System.in);
         this.wordParser = new WordParser();
+        this.testingSet = (JsonFileEntity) ObjectMapperWrapper.readFile(new File(TEST_DATA_JSON), JsonFileEntity.class);
+        this.validator = new Validator(classifier);
     }
 
     public void handleChoice(int option) {
@@ -40,6 +55,14 @@ public class ChoiceHandler {
                 break;
             }
             case 4: {
+                handleRunValidation();
+                break;
+            }
+            case 5: {
+                handleShowPrecision();
+                break;
+            }
+            case 6: {
                 handleExit();
                 break;
             }
@@ -85,6 +108,15 @@ public class ChoiceHandler {
 
     private void handleSizeOfVocabulary() {
         System.out.println(tokensHolder.getVocabularySize());
+    }
+
+    private void handleShowPrecision() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void handleRunValidation() {
+        ValidationResponse response = validator.validate(testingSet);
+        System.out.println(response);
     }
 
 }

@@ -41,7 +41,7 @@ public class Main {
         Classifier classifier = new Classifier(tokenHolder);
 
         //Will show validation percentage
-        new Validator(classifier, jsonFileEntity).validate();
+        //new Validator(classifier, jsonFileEntity).validate();
 
         // Start the CLI
         ChoiceHandler ch = new ChoiceHandler(tokenHolder, classifier);

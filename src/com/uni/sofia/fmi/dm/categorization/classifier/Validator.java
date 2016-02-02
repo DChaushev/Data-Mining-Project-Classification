@@ -12,25 +12,55 @@ import java.util.List;
 public class Validator {
 
     private final Classifier classifier;
-    private final JsonFileEntity testData;
 
-    public Validator(Classifier classifier, JsonFileEntity testData) {
+    public Validator(Classifier classifier) {
         this.classifier = classifier;
-        this.testData = testData;
     }
 
-    public void validate() {
+    public ValidationResponse validate(JsonFileEntity testData) {
         List<ReviewEntity> reviews = testData.getReviews();
         int guessedReviews = 0;
 
+        int truePositives = 0;
+        int falseNegative = 0;
+
+        int falsePositive = 0;
+        int trueNegative = 0;
+
         for (ReviewEntity review : reviews) {
             Categories category = classifier.classify(review.getText());
-            if (review.getCategory().equals(category)) {
+            Categories originalCategory = review.getCategory();
+
+            if (originalCategory.equals(category)) {
                 guessedReviews++;
             }
+
+            if (category.equals(Categories.POSITIVE)) {
+                if (originalCategory.equals(Categories.POSITIVE)) {
+                    truePositives++;
+                } else {
+                    falsePositive++;
+                }
+            } else {
+                if (originalCategory.equals(Categories.POSITIVE)) {
+                    falseNegative++;
+                } else {
+                    trueNegative++;
+                }
+            }
+
         }
 
-        System.out.println((double) guessedReviews / reviews.size() * 100 + "%");
+        // TODO: recheck theese formulaes
+        double precision = (double) truePositives / (truePositives + falsePositive) * 100;
+        double recall = (double) truePositives / (truePositives + falseNegative) * 100;
+        double accuracy = (double) (truePositives + trueNegative) / (truePositives + trueNegative + falsePositive + falseNegative) * 100;
+        double fMeasure = (double) precision * recall / (precision + recall) * 100;
+        double guessedPercentage = (double) guessedReviews / reviews.size() * 100;
+
+        ValidationResponse response = new ValidationResponse(guessedPercentage, precision, recall, accuracy, fMeasure);
+
+        return response;
     }
 
 }

@@ -6,28 +6,37 @@ import java.util.Scanner;
  * Created by vankata on 31.01.16.
  */
 public class ConsoleApp {
-
-    private ChoiceHandler choiceHandler;
-    private Scanner input;
-
-    private final String choicesString = String.format("1. %s\n2. %s\n3. %s\n4. %s\n-----------\nChoose option: ", "Classify text", "Probabilities for last classified text", "Size of vocabulary", "exit");
-
+    
+    private final ChoiceHandler choiceHandler;
+    private final Scanner input;
+    
+    private static final String OPTION_DISPLAY_FORMAT = "%d. %s";
+    
+    private static final String[] options = new String[]{
+        "Classify text",
+        "Probabilities for last classified text",
+        "Size of vocabulary",
+        "Run validation",
+        "Show precision",
+        "Exit"
+    };
+    
     public ConsoleApp(ChoiceHandler handler) {
         this.choiceHandler = handler;
         input = new Scanner(System.in);
     }
-
+    
     public void startApp() {
         while (true) {
-            System.out.print(choicesString);
+            printOptions();
             int choice = getChoice();
             choiceHandler.handleChoice(choice);
         }
     }
-
+    
     private int getChoice() {
         String nextLine = input.nextLine();
-
+        
         try {
             int parseInt = Integer.parseInt(nextLine);
             return parseInt;
@@ -35,5 +44,13 @@ public class ConsoleApp {
             return -1;
         }
     }
-
+    
+    private void printOptions() {
+        System.out.println("-----------------------------");
+        for (int i = 0; i < options.length; i++) {
+            System.out.println(String.format(OPTION_DISPLAY_FORMAT, i + 1, options[i]));
+        }
+        System.out.print("Choose an option: ");
+    }
+    
 }
