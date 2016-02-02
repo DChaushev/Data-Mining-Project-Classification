@@ -3,6 +3,7 @@ package com.uni.sofia.fmi.dm.categorization.classifier;
 import com.uni.sofia.fmi.dm.categorization.utils.Categories;
 import com.uni.sofia.fmi.dm.categorization.utils.Token;
 import com.uni.sofia.fmi.dm.categorization.utils.TokensHolder;
+import com.uni.sofia.fmi.dm.categorization.utils.console.Printer;
 import com.uni.sofia.fmi.dm.categorization.utils.parser.wordParser.WordParser;
 
 import java.util.regex.Matcher;
@@ -14,9 +15,11 @@ import java.util.regex.Matcher;
 public class Classifier {
 
     private TokensHolder tokensHolder;
+    private Printer printer;
 
-    public Classifier(TokensHolder tokensHolder) {
+    public Classifier(TokensHolder tokensHolder, Printer printer) {
         this.tokensHolder = tokensHolder;
+        this.printer = printer;
     }
 
     public Categories classify(String text) {
@@ -41,7 +44,7 @@ public class Classifier {
             if (token != null) {
                 for (int i = 0; i < numberOfClasses; i++) {
                     if (verbose) {
-                        System.out.print("P(" + tokenKey + " | " + i + ") = ");
+                        printer.displayMessagePrefix("P(" + tokenKey + " | " + i + ") = ");
                     }
                     classProbabilities[i] *= calculateProbability(token, i, verbose);
                 }
@@ -74,8 +77,8 @@ public class Classifier {
         int numberOfTokenClassOccurances = token.getOccurencesForClass(clazz);
 
         if (verbose) {
-            System.out.print(String.format("(%d + 1) / (%d + %d)", numberOfTokenClassOccurances, vocabularySize, numberOfTokensForClass));
-            System.out.println(" = " + (double) (numberOfTokenClassOccurances + 1) / (vocabularySize + numberOfTokensForClass));
+            printer.displayMessagePrefix(String.format("(%d + 1) / (%d + %d)", numberOfTokenClassOccurances, vocabularySize, numberOfTokensForClass));
+            printer.displayMessage(" = " + (double) (numberOfTokenClassOccurances + 1) / (vocabularySize + numberOfTokensForClass));
         }
         return (double) (numberOfTokenClassOccurances + 1) / (vocabularySize + numberOfTokensForClass);
     }

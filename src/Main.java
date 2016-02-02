@@ -4,6 +4,8 @@ import com.uni.sofia.fmi.dm.categorization.classifier.Validator;
 import com.uni.sofia.fmi.dm.categorization.utils.TokensHolder;
 import com.uni.sofia.fmi.dm.categorization.utils.console.ChoiceHandler;
 import com.uni.sofia.fmi.dm.categorization.utils.console.ConsoleApp;
+import com.uni.sofia.fmi.dm.categorization.utils.console.ConsolePrinter;
+import com.uni.sofia.fmi.dm.categorization.utils.console.Printer;
 import com.uni.sofia.fmi.dm.categorization.utils.parser.InformationParser;
 import com.uni.sofia.fmi.dm.categorization.utils.parser.JsonFileEntity;
 import com.uni.sofia.fmi.dm.categorization.utils.parser.JsonInformationParser;
@@ -38,13 +40,16 @@ public class Main {
         TokensHolder tokenHolder = ip.parse(TRAIN_DATA_JSON);
 
         JsonFileEntity jsonFileEntity = (JsonFileEntity) ObjectMapperWrapper.readFile(new File(TEST_DATA_JSON), JsonFileEntity.class);
-        Classifier classifier = new Classifier(tokenHolder);
+        
+        Printer printer = new ConsolePrinter();
+        
+        Classifier classifier = new Classifier(tokenHolder, printer);
 
         //Will show validation percentage
         //new Validator(classifier, jsonFileEntity).validate();
 
         // Start the CLI
-        ChoiceHandler ch = new ChoiceHandler(tokenHolder, classifier);
+        ChoiceHandler ch = new ChoiceHandler(tokenHolder, classifier, printer);
         ConsoleApp ca = new ConsoleApp(ch);
         ca.startApp();
     }

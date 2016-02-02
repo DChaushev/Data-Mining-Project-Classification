@@ -17,7 +17,6 @@ public class ConsoleApp {
         "Probabilities for last classified text",
         "Size of vocabulary",
         "Run validation",
-        "Show precision",
         "Exit"
     };
     

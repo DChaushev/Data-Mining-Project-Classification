@@ -55,10 +55,9 @@ public class Validator {
         double precision = (double) truePositives / (truePositives + falsePositive) * 100;
         double recall = (double) truePositives / (truePositives + falseNegative) * 100;
         double accuracy = (double) (truePositives + trueNegative) / (truePositives + trueNegative + falsePositive + falseNegative) * 100;
-        double fMeasure = (double) precision * recall / (precision + recall) * 100;
-        double guessedPercentage = (double) guessedReviews / reviews.size() * 100;
+        double fMeasure = (double) 2 * precision * recall / (precision + recall);
 
-        ValidationResponse response = new ValidationResponse(guessedPercentage, precision, recall, accuracy, fMeasure);
+        ValidationResponse response = new ValidationResponse(precision, recall, accuracy, fMeasure);
 
         return response;
     }

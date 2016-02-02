@@ -11,13 +11,13 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by vankata on 31.01.16.
  */
 public class ChoiceHandler {
+
+    private static final String ANSWER_HEADER = "-------- Answer --------";
 
     private static final String TEST_DATA_JSON = "stanfordDataTest.json";
 
@@ -30,7 +30,9 @@ public class ChoiceHandler {
     private final JsonFileEntity testingSet;
     private final Validator validator;
 
-    public ChoiceHandler(TokensHolder tokensHolder, Classifier classifier) throws IOException {
+    private final Printer printer;
+
+    public ChoiceHandler(TokensHolder tokensHolder, Classifier classifier, Printer printer) throws IOException {
         this.tokensHolder = tokensHolder;
         this.classifier = classifier;
         this.lastClassifiedText = null;
@@ -38,6 +40,8 @@ public class ChoiceHandler {
         this.wordParser = new WordParser();
         this.testingSet = (JsonFileEntity) ObjectMapperWrapper.readFile(new File(TEST_DATA_JSON), JsonFileEntity.class);
         this.validator = new Validator(classifier);
+
+        this.printer = printer;
     }
 
     public void handleChoice(int option) {
@@ -59,21 +63,17 @@ public class ChoiceHandler {
                 break;
             }
             case 5: {
-                handleShowPrecision();
-                break;
-            }
-            case 6: {
                 handleExit();
                 break;
             }
             default: {
-                System.out.println("No such option!!!");
+                printer.displayMessage("No such option.");
             }
         }
     }
 
     private void handleClassifyText() {
-        System.out.println("Enter text to be classified:");
+        printer.displayMessage("Enter text to be classified:");
 
         String textToClassify;
 
@@ -81,14 +81,15 @@ public class ChoiceHandler {
             textToClassify = input.nextLine();
 
             if (textToClassify.isEmpty() || (textToClassify.compareToIgnoreCase(" ") == 0)) {
-                System.out.println("Not valid input!!!");
-                System.out.println("Enter text to be classified:");
+                printer.displayMessage("Not valid input!!!");
+                printer.displayMessage("Enter text to be classified:");
             } else {
                 break;
             }
         }
 
-        System.out.println(classifier.classify(textToClassify));
+        printer.displayMessage(ANSWER_HEADER);
+        printer.displayMessage(classifier.classify(textToClassify));
 
         lastClassifiedText = textToClassify;
     }
@@ -99,24 +100,23 @@ public class ChoiceHandler {
 
     private void handleProbabilitiesForLastText() {
         if (lastClassifiedText == null) {
-            System.out.println("There is nothing classified!");
+            printer.displayMessage("There is nothing classified!");
             return;
         }
 
+        printer.displayMessage(ANSWER_HEADER);
         classifier.classify(lastClassifiedText, true);
     }
 
     private void handleSizeOfVocabulary() {
-        System.out.println(tokensHolder.getVocabularySize());
-    }
-
-    private void handleShowPrecision() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        printer.displayMessage(ANSWER_HEADER);
+        printer.displayMessage(tokensHolder.getVocabularySize());
     }
 
     private void handleRunValidation() {
         ValidationResponse response = validator.validate(testingSet);
-        System.out.println(response);
+        printer.displayMessage(ANSWER_HEADER);
+        printer.displayMessage(response);
     }
 
 }
